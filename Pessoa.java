@@ -1,6 +1,4 @@
 package projeto;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 abstract class Pessoa {
@@ -12,7 +10,6 @@ abstract class Pessoa {
     protected boolean autenticado = false;
     Scanner ent = new Scanner(System.in);
     
-    protected static List<Pessoa> pessoa = new ArrayList<>();
 
     public boolean login(String email, String senha){
         return this.email.equals(email) && this.senha.equals(senha);
@@ -74,59 +71,24 @@ abstract class Pessoa {
         this.email = ent.nextLine();
         System.out.print("SENHA:");
         this.senha = ent.nextLine();
-        pessoa.add(this);
 
         System.out.println("Pessoa cadastrada!");
     }
 
-    public void listarPessoas() {
-        if (pessoa.isEmpty()) {
-            System.out.println("Nenhuma pessoa cadastrada.");
-        } else {
-            System.out.println("\n-----------------------------");
-            System.out.println("LISTA DE PESSOAS CADASTRADAS:");
-            System.out.println("-----------------------------");
-            for (int i = 0; i < pessoa.size(); i++) {
-                System.out.println("NOME: " + pessoa.get(i).getNome());
-                System.out.println("IDADE: " + pessoa.get(i).getIdade());
-                System.out.println("CPF: " + pessoa.get(i).getCpf());
-                System.out.println("EMAIL: " + pessoa.get(i).getEmail());
-                System.out.println("Senha: " + pessoa.get(i).getSenha());
-                System.out.println("----------------------------------");
-            }
-        }
-    }
-
     public void editarPessoa() {
-        System.out.println("Digite o CPF da pessoa a ser editada: ");
-        String cpf = ent.nextLine();
-        for (Pessoa p : pessoa) {
-            if (p.getCpf().equals(cpf)) {
-                System.out.println("Editar os dados de " + p.getNome());
-                System.out.print("NOME: ");
-                p.setNome(ent.nextLine());
-                System.out.print("IDADE: ");
-                p.setIdade(ent.nextInt());
-                ent.nextLine();
-                System.out.print("CPF: ");
-                p.setCpf(ent.nextLine());
-                System.out.print("EMAIL: ");
-                p.setEmail(ent.nextLine());
-                System.out.print("SENHA: ");
-                p.setSenha(ent.nextLine());
-                System.out.println("Dados editados com sucesso!");
-                return;
-            }
-        }
-        System.out.println("CPF não encontrado!");
+        System.out.print("NOME: ");
+        setNome(ent.nextLine());
+        System.out.print("IDADE: ");
+        setIdade(ent.nextInt());
+        ent.nextLine();
+        System.out.print("CPF: ");
+        setCpf(ent.nextLine());
+        System.out.print("EMAIL: ");
+        setEmail(ent.nextLine());
+        System.out.print("SENHA: ");
+        setSenha(ent.nextLine());
+        System.out.println("Dados editados com sucesso!");
     }
+    
 
-    public void visualizarPessoa() {
-    }
-
-    public void buscarPessoa() {
-    }
-
-    public void removerPessoa() {
-    }
 }
