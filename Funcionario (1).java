@@ -1,18 +1,21 @@
-package Projeto;
+package projeto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Funcionario extends Pessoa {
     private boolean administrador;
     private String senha; 
     private List<Funcionario> funcionarios = new ArrayList<>();
 
-    public List<Funionario> getFuncionario() {
-        return funcionario;
+    Scanner ent = new Scanner(System.in);
+
+    public List<Funcionario> getFuncionario() {
+        return funcionarios;
     }
 
-    public String getAdministrador(boolean administrador) {
+    public boolean isAdministrador() {
         return administrador;
     }
 
@@ -20,36 +23,36 @@ public String getSenha(){
     return senha;
 }
     public void setFuncionario() {
-    this.funcionario = funcionario;
-    }
+    this.funcionarios = funcionarios;
 
-  public void setAdministrador(){
-  this.administrador = administrador;
- }
+} 
+public void isAdministrador(boolean administrador){
+this.administrador = administrador;
+}
 
-      public void setSenha(String senha) {
+    public void setSenha(String senha) {
         this.senha = senha;
     }
 
     public void cadastrarFuncionario() {
-System.ot.print("Digite o numero do CPF:");
+System.out.print("Digite o numero do CPF:");
 String cpf = ent.nextLine();
 
 for (Funcionario a : funcionarios){
     if(a.getcpf().equals(cpf)){
-        System.out.println("Funcionario cadastrado!");
+        System.out.println("Funcionario já cadastrado!");
         return;
     }
 }
 System.out.println("Deseja se cadastrar como funcionario?(sim/não)");
-String resposta = ent.netLine();
+String resposta = ent.nextLine();
 
 if(resposta.equalsIgnorecase("sim")){
         System.out.println("----------------------------------");
         System.out.println("CADASTRAR FUNCIONÁRIO"              );
         System.out.println("-----------------------------------");
 
-        Funcionario novoFuncionario = new Funcionariio();
+        Funcionario novoFuncionario = new Funcionario();
         novoFuncionario.cadastrarpessoa();
         System.out.print("NOME: ");
         novoFuncionario.setNome(ent.nextLine());
@@ -72,16 +75,14 @@ if(resposta.equalsIgnorecase("sim")){
     public void editarFuncionario() {
         System.out.print("Digite  o  numero do CPF: ");
         String cpf = ent.nextLine();
-
         for (Funcionario a : funcionarios) {
             if (a.getCpf().equals(cpf)) {
-    
                 System.out.println("Editar dados do(a) funcionário(a): " + a.getNome());
                 a.editarpessoa();
                 System.out.println("NOME: ");
                 a.setNome(ent.nextLine());
                 System.out.println("IDADE: ");
-                a.setIdade(ent.nextInt());
+                a.setIdade(ent.nextLine());
                 System.out.println("CPF: ");
                 a.setCpf(ent.nextLine());
                 System.out.println("EMAIL: ");
@@ -100,19 +101,19 @@ public void buscarFuncionario(){
     String cpf = ent.nextLine();
     boolean funcionarioEncontrado = false;
 
-    for (Funcionario a : funcionario){
+    for (Funcionario a : funcionarios){
         if(a.getCpf().equals(cpf)){
-            funcionarioEncotrado = true;
+            funcionarioEncontrado = true;
             System.out.println("NOME:" + a.getNome());
-            System.out.println("IDADE:" +a.getIdade());
-            System.out.println("CPF:"+a.getCpf());
+            System.out.println("IDADE:" + a.getIdade());
+            System.out.println("CPF:"+ a.getCpf());
             System.out.println("EMAIL:"+ a.getEmail());
-            System.out.println("SENHA:"a.getSenha());
+            System.out.println("SENHA:"+ a.getSenha());
             System.out.println("---------------------");
             return;
         }
-        if(funcionarioEncontrado){
-            System.out.println("Funcionario nao cadastrado!");
+        if(!funcionarioEncontrado) {
+            System.out.println("Funcionario não cadastrado!");
         }
     }
 }
@@ -135,11 +136,9 @@ public void buscarFuncionario(){
                 }
             }
         }
-    }
-
     
     public void removerFuncionario() {
-        System.out.println("Digite o CPF do funcionário a ser removido: ");
+        System.out.print("Digite o numero do CPF: ");
         String cpf = ent.nextLine();
         boolean funcionarioencontrado = false;
 
@@ -148,51 +147,50 @@ public void buscarFuncionario(){
                 funcionarioEncontrado = true;
                 System.out.println("Funcionário(a):" + a.getNome());
                 System.out.println("Deseja remove-lo? (sim/não)");
-                String resposta= ent.nextLine();
-                if(resposta.equalsIgnorecase("sim")){
+                String resposta = ent.nextLine();
+                if(resposta.equalsIgnorecase("sim")) {
                     funcionarios.remove(a);
                     System.out.println("Funcionario removido.");
                     return;
-                }else{
+                } else{
                     System.out.println("Remoção de funcionario cancelada.");
                 }
             }
         }
 
         if (!funcionarioEncontrado) {
-            System.out.println("Funcionário não cadastrado.");
+            System.out.println("Funcionário não cadastrado!");
         }
-    
     }
+
     public void visualizarFuncionario() {
-        if(funcionarios.isEmpty()){
-System.out.println("Não ha funcionarios para visualizar.");
+        if(funcionarios.isEmpty()) {
+System.out.println("Não há funcionarios para visualizar.");
 return;
         }
-        System.out.println("Digite o CPF do funcionário a ser visualizado: ");
+        System.out.print("Digite o CPF do funcionário que deseja visualizar: ");
         String cpf = ent.nextLine();
-        boolean encontrado = false;
+        boolean funcionarioEncontrado = false;
 
-        for (Funcionario a : funcionario) {
+        for (Funcionario a : funcionarios) {
             if (a.getCpf().equals(cpf)) {
                 funcionarioEncontrado = true;
-                System.out.println("\n----------------------------------");
-                System.out.println("DETALHES DO FUNCIONÁRIO:"             );
-                System.out.println("-----------------------------------");
+                System.out.println("Detalhes do Funcionario: ");
                 System.out.println("NOME: " + a.getNome());
                 System.out.println("IDADE: " + a.getIdade());
                 System.out.println("CPF: " + a.getCpf());
                 System.out.println("EMAIL: " + a.getEmail());
-                System.out.println("ADMINISTRADOR: " + a.getAdministrador());
+                System.out.println("ADMINISTRADOR: " + (a.isAdministrador()? "sim" : "não"));
                 System.out.println("----------------------------------");
                 return;
             }
         }
 
-        if (!funcionarioencontrado) {
-            System.out.println("CPF invalidoo.");
+        if (!funcionarioEncontrado) {
+            System.out.println("CPF invalido.");
         }
     }
+}
 
 
 
