@@ -1,4 +1,7 @@
 package projeto;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,7 +16,6 @@ public class Livro {
     Scanner scanner = new Scanner(System.in);
     protected static List<Livro> livro = new ArrayList<>();
 
-    
     public String getTitulo() {
         return titulo;
     }
@@ -66,7 +68,7 @@ public class Livro {
         System.out.println("\n------------------------------");
         System.out.println(" PÁGINA DE CADASTRO DE LIVROS");
         System.out.println("------------------------------");
-        
+
         System.out.print("TÍTULO: ");
         this.titulo = scanner.nextLine();
         System.out.print("AUTOR: ");
@@ -81,6 +83,29 @@ public class Livro {
         System.out.print("PRATELEIRA: ");
         this.prateleira = scanner.nextLine();
         livro.add(this);
+
+        registrarEmArquivo();
+    }
+
+    private void registrarEmArquivo() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("livros.txt", true))) {
+            writer.write("TÍTULO: " + this.titulo);
+            writer.newLine();
+            writer.write("AUTOR: " + this.autor);
+            writer.newLine();
+            writer.write("ANO DA EDIÇÃO: " + this.ano);
+            writer.newLine();
+            writer.write("QUANTIDADE DISPONÍVEL: " + this.quantidadeDisponivel);
+            writer.newLine();
+            writer.write("CORREDOR: " + this.corredor);
+            writer.newLine();
+            writer.write("PRATELEIRA: " + this.prateleira);
+            writer.newLine();
+            writer.write("----------------------------------");
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Erro ao gravar informações no arquivo: " + e.getMessage());
+        }
     }
 
     public void listarLivro() {
@@ -126,7 +151,6 @@ public class Livro {
             }
         }
         System.out.println("Livro não encontrado!");
-
     }
 
     public void visualizarLivro() {
@@ -178,8 +202,7 @@ public class Livro {
         System.out.println("Livro não encontrado.");
     }
 
-
-    public void listarLivrosForaDeEstoque(){
+    public void listarLivrosForaDeEstoque() {
         System.out.println("\nLIVROS FORA DE ESTOQUE:");
         boolean encontrou = false;
         for (Livro l : livro) {
@@ -192,8 +215,8 @@ public class Livro {
             System.out.println("Nenhum livro está fora de estoque.");
         }
     }
-    
-    public String localizacaoDoLivro(){
+
+    public String localizacaoDoLivro() {
         System.out.println("Digite o título do livro para localizar: ");
         String titulo = scanner.nextLine();
         for (Livro l : livro) {
@@ -201,7 +224,6 @@ public class Livro {
                 System.out.println("CORREDOR: " + l.getCorredor() + "\nPRATELEIRA: " + l.getPrateleira());
             }
         }
-        return("Livro não encontrado!");
+        return ("Livro não encontrado!");
     }
-
 }
