@@ -38,9 +38,7 @@ public class Emprestimo {
 
     public Aluno getAluno() {
         return aluno;
-    }
-
-    
+    }    
 
     public Livro getLivro() {
         return livro;
