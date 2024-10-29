@@ -41,7 +41,6 @@ abstract class Pessoa {
         setSenha(ent.nextLine());
     }
 
-    
     public String getNome() {
         return nome;
     }
@@ -79,6 +78,16 @@ abstract class Pessoa {
     }
 
     public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public Pessoa() {
+    }
+
+    public Pessoa(String nome, int idade, String cpf, String email) {
+        this.nome = nome;
+        this.idade = idade;
+        this.cpf = cpf;
         this.email = email;
     }
 }
