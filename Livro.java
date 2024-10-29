@@ -1,4 +1,3 @@
-package projeto;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -133,6 +132,7 @@ public class Livro {
         for (Livro l : livro) {
             if (l.getTitulo().equals(titulo)) {
                 System.out.println("Editar o livro " + l.getTitulo());
+                System.out.println();
                 System.out.println("TÍTULO: ");
                 l.titulo = scanner.nextLine();
                 System.out.println("AUTOR: ");
@@ -158,6 +158,7 @@ public class Livro {
         String titulo = scanner.nextLine();
         for (Livro l : livro) {
             if (l.getTitulo().equals(titulo)) {
+                System.out.println();
                 System.out.println("TÍTULO: " + l.getTitulo());
                 System.out.println("AUTOR: " + l.getAutor());
                 System.out.println("ANO DA EDIÇÃO: " + l.getAno());
@@ -176,6 +177,7 @@ public class Livro {
         String titulo = scanner.nextLine();
         for (Livro l : livro) {
             if (l.getTitulo().equals(titulo)) {
+                System.out.println();
                 System.out.println("TÍTULO: " + l.getTitulo());
                 System.out.println("AUTOR: " + l.getAutor());
                 System.out.println("ANO DA EDIÇÃO: " + l.getAno());
@@ -225,5 +227,60 @@ public class Livro {
             }
         }
         return ("Livro não encontrado!");
+    }
+
+    public void menuLivro() {
+        boolean executando;
+        do {
+            System.out.println("\n==== Menu Livro ====");
+            System.out.println("1. Cadastrar Livro");
+            System.out.println("2. Remover Livro");
+            System.out.println("3. Editar Livro");
+            System.out.println("4. Buscar Livro");
+            System.out.println("5. Listar Livros");
+            System.out.println("6. Visualizar Livro");
+            System.out.println("7. Listar Livros Fora de Estoque");
+            System.out.println("8. Localização do Livro");
+            System.out.println("9. Sair");
+            System.out.print("Escolha uma opção: ");
+
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            executando = true;
+
+            switch (opcao) {
+                case 1:
+                    cadastrarLivro();
+                    break;
+                case 2:
+                    removerLivro();
+                    break;
+                case 3:
+                    editarLivro();
+                    break;
+                case 4:
+                    buscarLivro();
+                    break;
+                case 5:
+                    listarLivro();
+                    break;
+                case 6:
+                    visualizarLivro();
+                    break;
+                case 7:
+                    listarLivrosForaDeEstoque();
+                    break;
+                case 8:
+                    localizacaoDoLivro();
+                    break;
+                case 9:
+                    System.out.println("Saindo...");
+                    executando = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (executando);
     }
 }
