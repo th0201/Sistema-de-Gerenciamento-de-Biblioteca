@@ -1,21 +1,24 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 
 public class Funcionario extends Pessoa {
     private boolean administrador;
     private String senha;
-    private static final String ARQUIVO_FUNCIONARIOS = "funcionarios.txt";
-    private static List<Funcionario> funcionarios = carregarFuncionarios();
-    transient Scanner ent = new Scanner(System.in);
+    private String ARQUIVO_FUNCIONARIOS = "funcionarios.txt";
+    private List<Funcionario> funcionarios = new ArrayList<>();
 
     public Funcionario() {
+        lerArquivo();
+    }
+    
+    public Funcionario(String nome, int idade, String cpf, String email) {
+        super(nome, idade, cpf, email);
     }
 
     public void cadastrarFuncionario() {
@@ -25,6 +28,13 @@ public class Funcionario extends Pessoa {
         for (Funcionario a : funcionarios) {
             if (a.getCpf().equals(cpf)) {
                 System.out.println("Funcionário já cadastrado!");
+                return;
+            }
+        }
+        Aluno aluno = new Aluno();
+        for (Aluno a : aluno.getAlunos()) {
+            if (a.getCpf().equals(cpf)) {
+                System.out.println("CPF já cadastrado na lista de alunos!");
                 return;
             }
         }
@@ -39,14 +49,27 @@ public class Funcionario extends Pessoa {
 
             Funcionario novoFuncionario = new Funcionario();
             novoFuncionario.cadastrarPessoa();
-            System.out.print("SENHA: ");
-            novoFuncionario.setSenha(ent.nextLine());
             funcionarios.add(novoFuncionario);
 
-            salvarFuncionarios();
+            salvarDadosArquivo();
             System.out.println("Funcionário cadastrado com sucesso!");
         } else {
             System.out.println("Cadastro de funcionário cancelado.");
+        }
+    }
+
+    public void atualizarArquivo() {
+        try (FileWriter escritor = new FileWriter(ARQUIVO_FUNCIONARIOS, StandardCharsets.ISO_8859_1, false)) {
+            escritor.write("Nome;Idade;CPF;Email;Senha;\n");
+
+            for (Funcionario a : funcionarios) {
+                escritor.write(a.getNome() + ";" + a.getIdade() + ";" + a.getCpf() + ";"
+                        + a.getEmail() + ";" + a.getSenha() + ";" + "\n");
+            }
+            escritor.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao atualizar o arquivo: " + e.getMessage());
         }
     }
 
@@ -56,11 +79,10 @@ public class Funcionario extends Pessoa {
         for (Funcionario a : funcionarios) {
             if (a.getCpf().equals(cpf)) {
                 System.out.println("Editar dados do(a) funcionário(a): " + a.getNome());
+                System.out.println();
                 a.editarPessoa();
-                System.out.print("Nova SENHA: ");
-                a.setSenha(ent.nextLine());
 
-                salvarFuncionarios();
+                atualizarArquivo();
                 System.out.println("Dados editados com sucesso!");
                 return;
             }
@@ -76,6 +98,7 @@ public class Funcionario extends Pessoa {
         for (Funcionario a : funcionarios) {
             if (a.getCpf().equals(cpf)) {
                 funcionarioEncontrado = true;
+                System.out.println();
                 System.out.println("NOME: " + a.getNome());
                 System.out.println("IDADE: " + a.getIdade());
                 System.out.println("CPF: " + a.getCpf());
@@ -122,7 +145,7 @@ public class Funcionario extends Pessoa {
                 String resposta = ent.nextLine();
                 if (resposta.equalsIgnoreCase("sim")) {
                     funcionarios.remove(a);
-                    salvarFuncionarios();
+                    atualizarArquivo();
                     System.out.println("Funcionário removido.");
                     return;
                 } else {
@@ -136,50 +159,90 @@ public class Funcionario extends Pessoa {
         }
     }
 
-    private static void salvarFuncionarios() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_FUNCIONARIOS))) {
-            for (Funcionario funcionario : funcionarios) {
-                writer.write("NOME: " + funcionario.getNome() + "\n");
-                writer.write("IDADE: " + funcionario.getIdade() + "\n");
-                writer.write("CPF: " + funcionario.getCpf() + "\n");
-                writer.write("EMAIL: " + funcionario.getEmail() + "\n");
-                writer.write("SENHA: " + funcionario.getSenha() + "\n");
-                writer.write("ADMINISTRADOR: " + funcionario.isAdministrador() + "\n");
-                writer.write("------------------------\n");
+    public void salvarDadosArquivo() {
+        try {
+            boolean arquivoExiste = new File(ARQUIVO_FUNCIONARIOS).exists();
+            FileWriter escritor = new FileWriter(ARQUIVO_FUNCIONARIOS, StandardCharsets.ISO_8859_1, true);
+
+            if (!arquivoExiste) {
+                escritor.write("Nome;Idade;CPF;Email;Senha;Matrícula;Curso\n");
             }
+
+            for (Funcionario a : funcionarios) {
+                escritor.write(a.getNome() + ";" + a.getIdade() + ";" + a.getCpf() + ";"
+                        + a.getEmail() + ";" + a.getSenha() + ";" + "\n");
+            }
+            // Escrever todos os dados no arquivo
+            escritor.flush();
+            escritor.close();
         } catch (IOException e) {
-            System.out.println("Erro ao salvar funcionários: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private static List<Funcionario> carregarFuncionarios() {
-        List<Funcionario> funcionariosCarregados = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO_FUNCIONARIOS))) {
-            String linha;
-            Funcionario funcionario = null;
-            while ((linha = reader.readLine()) != null) {
-                if (linha.startsWith("NOME:")) {
-                    funcionario = new Funcionario();
-                    funcionario.setNome(linha.split(": ")[1]);
-                } else if (linha.startsWith("IDADE:")) {
-                    funcionario.setIdade(Integer.parseInt(linha.split(": ")[1]));
-                } else if (linha.startsWith("CPF:")) {
-                    funcionario.setCpf(linha.split(": ")[1]);
-                } else if (linha.startsWith("EMAIL:")) {
-                    funcionario.setEmail(linha.split(": ")[1]);
-                } else if (linha.startsWith("SENHA:")) {
-                    funcionario.setSenha(linha.split(": ")[1]);
-                } else if (linha.startsWith("ADMINISTRADOR:")) {
-                    funcionario.isAdministrador(Boolean.parseBoolean(linha.split(": ")[1]));
-                    funcionariosCarregados.add(funcionario);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo de funcionários não encontrado. Um novo será criado.");
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar funcionários: " + e.getMessage());
+    public void lerArquivo() {
+        File arquivo = new File(ARQUIVO_FUNCIONARIOS);
+        // Verifica se o arquivo existe antes de fazer a leitura
+        if (!arquivo.exists()) {
+            return;
         }
-        return funcionariosCarregados;
+        try {
+            // Abrir o leitor para ler o arquivo
+            BufferedReader leitor = new BufferedReader(new FileReader(ARQUIVO_FUNCIONARIOS));
+            String linha;
+            boolean primeiraLinha = true;
+
+            // Ler cada linha inteira no arquivo, ignorando a primeira linha
+            while ((linha = leitor.readLine()) != null) {
+                // Ignora a primeira linha
+                if (primeiraLinha) {
+                    primeiraLinha = false;
+                    continue;
+                }
+
+                // Dividir a linha em partes usando o ponto e vírgula como separador
+                String[] partes = linha.split(";");
+                String nome = partes[0];
+                int idade = Integer.parseInt(partes[1]); // converte para string
+                String cpf = partes[2];
+                String email = partes[3];
+                String senha = partes[4];
+
+                Funcionario a = new Funcionario(nome, idade, cpf, email);
+                a.setSenha(senha);
+                funcionarios.add(a);
+            }
+            leitor.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void visualizarFuncionario() {
+        if (funcionarios.isEmpty()) {
+            System.out.println("Não há funcionarios para visualizar.");
+            return;
+        }
+        System.out.print("Digite o CPF do funcionario que deseja visualizar: ");
+        String cpf = ent.nextLine();
+        boolean funcionarioEncontrado = false;
+
+        for (Funcionario a : funcionarios) {
+            if (a.getCpf().equals(cpf)) {
+                funcionarioEncontrado = true;
+                System.out.println("----------------------------------");
+                System.out.println("Detalhes do Funcionario: ");
+                System.out.println("NOME: " + a.getNome());
+                System.out.println("IDADE: " + a.getIdade());
+                System.out.println("CPF: " + a.getCpf());
+                System.out.println("EMAIL: " + a.getEmail());
+                System.out.println("----------------------------------");
+                return;
+            }
+        }
+        if (!funcionarioEncontrado) {
+            System.out.println("CPF inválido.");
+        }
     }
 
     public boolean isAdministrador() {
@@ -196,5 +259,9 @@ public class Funcionario extends Pessoa {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public List<Funcionario> getFuncionarios() {
+        return funcionarios;
     }
 }
