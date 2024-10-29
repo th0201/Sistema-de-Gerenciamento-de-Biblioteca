@@ -3,13 +3,13 @@ import java.util.Scanner;
 public class GerenciadorDeUsuarios {
     boolean continuar = false;
     int opcao;
-    Scanner ent = new Scanner(System.in);
-    AlunoCSV aluno = new AlunoCSV();
+    Scanner scanner = new Scanner(System.in);
+    Aluno aluno = new Aluno();
     Funcionario funcionario = new Funcionario();
 
     public void realizaCadastro() {
         System.out.println("Realizar cadastro de aluno ou de funcionario? ");
-        String resposta = ent.nextLine();
+        String resposta = scanner.nextLine();
 
         if (resposta.equalsIgnoreCase("aluno")) {
             aluno.cadastrarAluno();
@@ -19,7 +19,7 @@ public class GerenciadorDeUsuarios {
     }
 
     public void verificaCadastro() {
-        if (aluno.getAlunos() == null || funcionario.getFuncionario() == null) {
+        if (aluno.getAlunos() == null || funcionario.getFuncionarios() == null) {
             System.out.println("Nenhum aluno cadastrado no sistema.");
             System.out.println("Você deve se cadastrar primeiro.");
             realizaCadastro();
@@ -27,81 +27,102 @@ public class GerenciadorDeUsuarios {
     }
 
     public void menuAluno() {
-        this.continuar = !this.continuar;
-        while (continuar) {
-            System.out.println("MENU:");
-            System.out.println("1. Editar Aluno");
-            System.out.println("2. Buscar Aluno");
-            System.out.println("3. Listar Alunos");
-            System.out.println("4. Remover Aluno");
-            System.out.println("5. Visualizar Aluno");
-            System.out.println("6. Sair");
+        boolean executando;
+        do {
+            System.out.println("\n==== Menu Aluno ====");
+            System.out.println("1. Cadastrar Aluno");
+            System.out.println("2. Editar Aluno");
+            System.out.println("3. Buscar Aluno");
+            System.out.println("4. Listar Alunos");
+            System.out.println("5. Remover Aluno");
+            System.out.println("6. Visualizar Aluno");
+            System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
-            opcao = ent.nextInt();
-            ent.nextLine();
+
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            executando = true;
 
             switch (opcao) {
                 case 1:
-                    aluno.editarAluno();
+                    aluno.cadastrarAluno();
                     break;
                 case 2:
-                    aluno.buscarAluno();
+                    aluno.editarAluno();
                     break;
                 case 3:
-                    aluno.listarAlunos();
+                    aluno.buscarAluno();
                     break;
                 case 4:
-                    aluno.removerAluno();
+                    aluno.listarAlunos();
                     break;
                 case 5:
-                    aluno.visualizarAluno();
+                    aluno.removerAluno();
                     break;
                 case 6:
-                    continuar = false;
+                    aluno.visualizarAluno();
+                    break;
+                case 0:
+                    System.out.println("Saindo...");
+                    executando = false;
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Opção inválida.");
             }
-        }
-        System.out.println("Programa encerrado.");
+        } while (executando);
     }
 
     public void menuFuncionario() {
-        while (continuar) {
-            System.out.println("MENU:");
-            System.out.println("1. Editar Aluno");
-            System.out.println("2. Buscar Aluno");
-            System.out.println("3. Listar Alunos");
-            System.out.println("4. Remover Aluno");
-            System.out.println("5. Visualizar Aluno");
-            System.out.println("6. Sair");
+        boolean executando;
+        do {
+            System.out.println("\n==== Menu Funcionário ====");
+            System.out.println("1. Cadastrar Funcionário");
+            System.out.println("2. Editar Funcionário");
+            System.out.println("3. Buscar Funcionário");
+            System.out.println("4. Listar Funcionários");
+            System.out.println("5. Remover Funcionário");
+            System.out.println("6. Visualizar Funcionário");
+            System.out.println("7. Menu Empréstimo");
+            System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
-            opcao = ent.nextInt();
+
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            executando = true;
 
             switch (opcao) {
                 case 1:
-                    funcionario.editarFuncionario();
+                    funcionario.cadastrarFuncionario();
                     break;
                 case 2:
-                    funcionario.buscarFuncionario();
+                    funcionario.editarFuncionario();
                     break;
                 case 3:
-                    funcionario.listarFuncionarios();
+                    funcionario.buscarFuncionario();
                     break;
                 case 4:
-                    funcionario.removerFuncionario();
+                    funcionario.listarFuncionarios();
                     break;
                 case 5:
-                    funcionario.visualizarFuncionario();
+                    funcionario.removerFuncionario();
                     break;
                 case 6:
-                    continuar = false;
+                    funcionario.visualizarFuncionario();
+                    break;
+                case 7:
+                    Emprestimo emprestimo = new Emprestimo();
+                    emprestimo.menuEmprestimo();
+                    break;
+                case 0:
+                    System.out.println("Saindo...");
+                    executando = false;
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Opção inválida.");
             }
-        }
-        System.out.println("Programa encerrado.");
+        } while (executando);
     }
 
     public void fazerLogin() {
@@ -111,9 +132,9 @@ public class GerenciadorDeUsuarios {
 
         while (!loginBemSucedido) {
             System.out.print("Email: ");
-            String email = ent.nextLine();
+            String email = scanner.nextLine();
             System.out.print("Senha: ");
-            String senha = ent.nextLine();
+            String senha = scanner.nextLine();
 
             for (Aluno a : aluno.getAlunos()) {
                 if (a.login(email, senha)) {
@@ -124,7 +145,7 @@ public class GerenciadorDeUsuarios {
                 }
             }
 
-            for (Funcionario f : funcionario.getFuncionario()) {
+            for (Funcionario f : funcionario.getFuncionarios()) {
                 if (f.login(email, senha)) {
                     System.out.println("Login bem-sucedido! Bem-vindo(a), " + f.getNome() + "!");
                     loginBemSucedido = true;
@@ -141,6 +162,6 @@ public class GerenciadorDeUsuarios {
                 return;
             }
         }
-        ent.close();
+        scanner.close();
     }
 }
